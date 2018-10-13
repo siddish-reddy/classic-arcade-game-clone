@@ -35,7 +35,8 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     if (this.x > rightCorner4bug) {
-        this.x = -50;
+        // to avoid memory wastage reusing older enemy instances
+        this.x = -101; // so that it seems as new one
         this.y = getRandRow() * 70;
     } else
         this.x = this.x + this.speed * dt;
