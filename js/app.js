@@ -28,7 +28,7 @@ var Enemy = function(row, speed) {
 /**
  *  This function is called for every update of the game
  *  and updates the position of the enemy depending upon his position
- * @param {*} dt delta time
+ * @param {number} dt delta time
  */
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
