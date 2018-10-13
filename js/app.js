@@ -1,12 +1,18 @@
 //rock's dimensions approximately 101x 171, removing shadow
-let X = 101;
-let Y = 83;
-let rightCorner = 3 * X;
-let bottomCorner = 4 * Y;
-let leftCorner = X;
-let topCorner = 0;
-let rightCorner4bug = 8 * Y;
-// Enemies our player must avoid
+const X = 101, // X is the width of rock, pixels a player moves in each step
+    Y = 83, // Y is pixels a player moves vertically in each step
+    rightCorner = 3 * X,
+    bottomCorner = 4 * Y,
+    leftCorner = X,
+    topCorner = 0,
+    rightCorner4bug = 8 * Y;
+
+/**
+ *  constructor for class to manage enemies our players must avoid
+ *
+ * @param {number} row  row where new enemy will appear
+ * @param {number} speed    speed for enemy to move along x-axis
+ */
 var Enemy = function(row, speed) {
     // speed indicating number of pixels to be moved per frame of animation
     this.x = -50;
@@ -18,7 +24,12 @@ var Enemy = function(row, speed) {
 };
 
 // Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+
+/**
+ *  This function is called for every update of the game
+ *  and updates the position of the enemy depending upon his position
+ * @param {*} dt delta time
+ */
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
@@ -30,15 +41,20 @@ Enemy.prototype.update = function(dt) {
         this.x = this.x + this.speed * dt;
 };
 
-// Draw the enemy on the screen, required method for game
+/**
+ * Draw the enemy on the screen, required method for game
+ * 
+ */
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+
+/**
+ * constructor for class Player managing position, inputs, winning, colliding...
+ *
+ */
 var Player = function() {
     this.x = 2 * X;
     this.y = 4 * 75;
@@ -53,6 +69,11 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+/**
+ *  handles the key pressed by the player and updates position and status.
+ *
+ * @param {string} keyPressed which is pressed by the player
+ */
 Player.prototype.handleInput = function(keyPressed) {
     if ((keyPressed === 'left') && (this.x >= leftCorner)) {
         this.x -= X;
@@ -70,23 +91,34 @@ Player.prototype.handleInput = function(keyPressed) {
         this.y += Y;
     }
 };
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+
+// Player object as am instant of Player class.
 var player = new Player();
 
+// list of enemies currently on screen with diffrent speeds.
 var allEnemies = [];
 allEnemies.push(new Enemy(getRandRow(), 200));
 allEnemies.push(new Enemy(getRandRow(), 100));
+
 setTimeout(addEnemy, 3000, 50);
 setTimeout(addEnemy, 5000, 100);
 setTimeout(addEnemy, 100000, 150);
 setTimeout(addEnemy, 15 * 1000, 200);
 
+/**
+ * adds the newly created enemy in a random row.
+ *
+ * @param {number} speed speed of the enemy to be added
+ */
 function addEnemy(speed) {
     allEnemies.push(new Enemy(getRandRow(), speed));
 }
 
+/**
+ *  Checks collision occured or not
+ *  if occurred it conveys the same and loads the game again.
+ *
+ */
 function checkCollisions() {
     for (enemy of allEnemies) {
         //console.log('Enemy y:', enemy.y);
@@ -97,6 +129,11 @@ function checkCollisions() {
     }
 };
 
+/**
+ *  Function to get random row
+ *
+ * @returns {number} row number among 1,2,3 returned randomly
+ */
 function getRandRow() {
     return (Math.floor(Math.random() * 3) + 1);
 };
