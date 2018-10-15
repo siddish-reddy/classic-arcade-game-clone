@@ -13,7 +13,7 @@ const RIGHT_CORNER_BUGS = 8 * Y;
  * @param {number} row  row where new enemy will appear
  * @param {number} speed    speed for enemy to move along x-axis
  */
-var Enemy = function Enemy(row, speed) {
+var Enemy = function(row, speed) {
     // speed indicating number of pixels to be moved per frame of animation
     this.x = -50;
     this.y = row * 70;
@@ -40,6 +40,7 @@ Enemy.prototype.update = function(dt) {
         this.y = getRandRow() * 70;
     } else
         this.x = this.x + this.speed * dt;
+    this.checkCollisions();
 };
 
 /**
@@ -51,7 +52,17 @@ Enemy.prototype.render = function() {
 
 };
 
-
+/**
+ *  Checks collision occured or not
+ *  if occurred it conveys the same and loads the game again.
+ *
+ */
+Enemy.prototype.checkCollisions = function() {
+    if ((Math.abs(player.y - this.y) < 20) && (Math.abs(player.x - this.x) < 50)) {
+        alert('Bhooom! \nBetter luck next time :)');
+        location.reload();
+    }
+};
 /**
  * constructor for class Player managing position, inputs, winning, colliding...
  *
@@ -63,18 +74,25 @@ var Player = function() {
 };
 
 Player.prototype.update = function(dt) {
-    checkCollisions();
+    this.checkWinning();
 };
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-/**
- *  handles the key pressed by the player and updates position and status.
- *
- * @param {string} keyPressed which is pressed by the player
- */
+// Check if player has reached to water and reset the game by changing players positions and keeping bugs count same.
+Player.prototype.checkWinning = function() {
+        if (this.y == -32) {
+            alert("  You have won the game !");
+            this.y = 4 * 75;
+        }
+    }
+    /**
+     *  handles the key pressed by the player and updates position and status.
+     *
+     * @param {string} keyPressed which is pressed by the player
+     */
 Player.prototype.handleInput = function(keyPressed) {
     if ((keyPressed === 'left') && (this.x >= LEFT_CORNER)) {
         this.x -= X;
@@ -83,10 +101,10 @@ Player.prototype.handleInput = function(keyPressed) {
     }
     // the canvas measures from top to bottom so opposite signs unlike normal algebra
     else if ((keyPressed === 'up') && (this.y >= TOP_CORNER)) {
-        this.y -= Y;
         if (this.y == -32) {
-            setTimeoutalert("  You have won the game !");
-            this.y = 4 * 75;
+            this.checkWinning();
+        } else {
+            this.y -= Y;
         }
     } else if ((keyPressed === 'down') && (this.y <= BOTTOM_CORNER)) {
         this.y += Y;
@@ -114,21 +132,6 @@ setTimeout(addEnemy, 15 * 1000, 200);
 function addEnemy(speed) {
     allEnemies.push(new Enemy(getRandRow(), speed));
 }
-
-/**
- *  Checks collision occured or not
- *  if occurred it conveys the same and loads the game again.
- *
- */
-function checkCollisions() {
-    for (enemy of allEnemies) {
-        //console.log('Enemy y:', enemy.y);
-        if ((Math.abs(player.y - enemy.y) < 20) && (Math.abs(player.x - enemy.x) < 50)) {
-            alert('Bhooom! \nBetter luck next time :)');
-            location.reload();
-        }
-    }
-};
 
 /**
  *  Function to get random row
