@@ -85,6 +85,7 @@ Player.prototype.render = function() {
 Player.prototype.checkWinning = function() {
         if (this.y == -32) {
             alert("  You have won the game !");
+            // Resetting the position of the player to again normal block
             this.y = 4 * 75;
         }
     }
