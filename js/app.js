@@ -1,19 +1,19 @@
-//rock's dimensions approximately 101x 171, removing shadow
-const X = 101, // X is the width of rock, pixels a player moves in each step
-    Y = 83, // Y is pixels a player moves vertically in each step
-    rightCorner = 3 * X,
-    bottomCorner = 4 * Y,
-    leftCorner = X,
-    topCorner = 0,
-    rightCorner4bug = 8 * Y;
+// rock's dimensions approximately 101x 171, removing shadow
+const X = 101; // X is the width of rock, pixels a player moves in each step
+const Y = 83; // Y is pixels a player moves vertically in each step
+const RIGHT_CORNER = 3 * X;
+const BOTTOM_CORNER = 4 * Y;
+const LEFT_CORNER = X;
+const TOP_CORNER = 0;
+const RIGHT_CORNER_BUGS = 8 * Y;
 
 /**
  *  constructor for class to manage enemies our players must avoid
- *
+ * @constructor
  * @param {number} row  row where new enemy will appear
  * @param {number} speed    speed for enemy to move along x-axis
  */
-var Enemy = function(row, speed) {
+var Enemy = function Enemy(row, speed) {
     // speed indicating number of pixels to be moved per frame of animation
     this.x = -50;
     this.y = row * 70;
@@ -34,7 +34,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    if (this.x > rightCorner4bug) {
+    if (this.x > RIGHT_CORNER_BUGS) {
         // to avoid memory wastage reusing older enemy instances
         this.x = -101; // so that it seems as new one
         this.y = getRandRow() * 70;
@@ -76,19 +76,19 @@ Player.prototype.render = function() {
  * @param {string} keyPressed which is pressed by the player
  */
 Player.prototype.handleInput = function(keyPressed) {
-    if ((keyPressed === 'left') && (this.x >= leftCorner)) {
+    if ((keyPressed === 'left') && (this.x >= LEFT_CORNER)) {
         this.x -= X;
-    } else if ((keyPressed === 'right') && (this.x <= rightCorner)) {
+    } else if ((keyPressed === 'right') && (this.x <= RIGHT_CORNER)) {
         this.x += X;
     }
     // the canvas measures from top to bottom so opposite signs unlike normal algebra
-    else if ((keyPressed === 'up') && (this.y >= topCorner)) {
+    else if ((keyPressed === 'up') && (this.y >= TOP_CORNER)) {
         this.y -= Y;
         if (this.y == -32) {
             setTimeoutalert("  You have won the game !");
             this.y = 4 * 75;
         }
-    } else if ((keyPressed === 'down') && (this.y <= bottomCorner)) {
+    } else if ((keyPressed === 'down') && (this.y <= BOTTOM_CORNER)) {
         this.y += Y;
     }
 };
